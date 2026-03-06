@@ -7,7 +7,7 @@ import json
 # Functions
 def set_json(data):
     with open("mt_data.json", "w") as file:
-        json.dump(data, file)
+        json.dump(data, file, indent=4)
 
 def get_json():
     with open("mt_data.json", "r") as file:
@@ -57,6 +57,4 @@ def remove_server(name: str, all: bool = False):
         set_value("servers", serverList)
 
 # Testing Code (ran when running json_handler.py separately)
-remove_server("blehhh")
-
 print(get_json())
