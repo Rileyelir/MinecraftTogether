@@ -1,3 +1,6 @@
+# main.py
+# Links everything together by receiving and parsing user input
+
 # Imports
 import os
 
@@ -6,7 +9,6 @@ print("MinecraftTogether | V3.0.0-dev\nType \"help\" to get started.")
 
 while True:
     command = input("\n> ").split(" ")
-    
     match command[0]:
         case "help":
             print("\nHelp!")
