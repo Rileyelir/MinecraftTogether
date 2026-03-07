@@ -1,5 +1,5 @@
-# json_interface.py
-# Handles setting and getting information from a generated json file, for data like server info, preferred tunneler locations, and other persistent data.
+# mt_data_interface.py
+# Handles setting and getting information from a generated json file called mt_data.json, for data like server info, preferred tunneler locations, and other persistent data.
 
 # Imports
 import json
