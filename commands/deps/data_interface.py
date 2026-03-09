@@ -1,4 +1,4 @@
-# mt_data_interface.py
+# data_interface.py
 # Handles setting and getting information from a generated json file called mt_data.json, for data like server info, preferred tunneler locations, and other persistent data.
 
 # Imports
@@ -12,19 +12,25 @@ def set_json(data):
 def get_json():
     with open("mt_data.json", "r") as file:
         return json.load(file)
-
+    
 def init_json():
-    set_json({
-        "servers": [],
-        "tunneler": None
-    })
+    try:
+        with open("mt_data.json", "r") as file:
+            pass
+    except FileNotFoundError:
+        set_json({
+            "servers": [],
+            "tunneler": None
+        })
     
 def set_value(key: str, value):
+    init_json()
     new = get_json()
     new[key] = value
     set_json(new)
 
 def get_value(key: str):
+    init_json()
     return get_json()[key]
 
 def add_server(name: str, path: str): # path is the path to the start file, not the folder
@@ -55,6 +61,3 @@ def remove_server(name: str, all: bool = False):
             if sv["name"] == name:
                 serverList.remove(sv)
         set_value("servers", serverList)
-
-# Testing Code (ran when running json_handler.py separately)
-print(get_json())

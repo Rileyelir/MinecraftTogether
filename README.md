@@ -1,3 +1,31 @@
 # MinecraftTogether
 
-A suite of tools to manage, setup, and network your Minecraft servers with ease.
+A suite of tools to create, manage, and tunnel/network your Minecraft servers with ease.
+
+---
+
+### Why should I use this?
+Have you ever tried setting up a Minecraft server for your friends and realized, "This is hard"?
+Maybe not, but it sure is annoying making your 10th two-week Minecraft friend server of the year.
+What about port forwarding? What if your router simply refuses to let you do anything smart?
+
+MinecraftTogether aims to make local server creation, configuration, management, and networking all easy and fast.
+
+### Features
+- ***Up-to-date Server Creation***
+Create full working servers in less than 20 seconds with ease on the latest versions the second they come out.
+- ***Easy Configuration***
+W.I.P.
+- ***Streamlined Management***
+W.I.P.
+- ***Tunneler Support***
+W.I.P.
+
+---
+
+### End Notes
+Thank you for checking out the project!
+
+This is MinecraftTogether, a tool that I've had sitting on the shelf for a while with a latest release that had multiple features outright broken and the program was unfunctional. It was pretty old too, with the latest release of V2 dating back to my 9th grade of high school. I figured now would be a great time to revisit this and build it from the ground up into something that people could use and get genuine value out of, including me!
+
+If you like what I've created here, it would mean the world if you could give the repository a star! If you aren't too happy about the current features or how something works, any feedback would be wonderful by opening an issue or making a post in the Discussions tab. I'm always open to code fixes and suggestions to make things better too if you're here as a programmer.

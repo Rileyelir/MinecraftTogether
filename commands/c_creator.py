@@ -4,9 +4,11 @@
 # Imports
 import requests
 from os import mkdir
+from shutil import rmtree
+from deps import data_interface
 
 # Functions
-def create_server():
+def create_server(): # Returning 0 means failed, 1 means success (in an ideal world)
     print("\n-- Server Creator --")
     name = input("Server Name: ")
     version = input("Server Version (i.e. 1.12, 1.21.11): ")
@@ -16,7 +18,25 @@ def create_server():
 
     maxRam = input("\nServer Ram Limit (gb): ")
     with open(f"{name}/start.bat", "w") as file:
-        file.write(f"java -Xmx{maxRam}G -Xms{maxRam}G -jar server.jar")
+        file.write(f"java -Xmx{maxRam}G -Xms{maxRam}G -jar server.jar nogui")
+
+    while True: # EULA Check
+        print("\nhttps://account.mojang.com/documents/minecraft_eula")
+        eula = input("Do you agree to the Minecraft EULA found above? (Y/n): ")
+
+        match eula.lower():
+            case "y"|"":
+                with open(f"{name}/eula.txt", "w") as file:
+                    file.write("eula=true")
+                break
+            case "n":
+                print("EULA disagreed to, server creation shutting down.")
+                rmtree(name)
+                return 0
+            case _:
+                print("Invalid answer, try again.")
+
+    data_interface.add_server(name, name)
 
 def download_vanilla_jar(version, path):
     vanillaManifest = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest.json").json()
@@ -32,5 +52,5 @@ def download_vanilla_jar(version, path):
             return
     print("[ERROR] Version not found or other error occurred.")
 
-# Testing Code (ran when running c_setup.py separately)
+# Testing Code (ran when running c_creator.py separately)
 create_server()
