@@ -32,6 +32,10 @@ class Manager:
             print("[ERROR] Server not found.")
             return
         
+        if self.process:
+            print("[ERROR] There is a a server already active.")
+            return
+
         def run():
             java_exe = get_java_path()
             if not java_exe:
@@ -43,23 +47,21 @@ class Manager:
 
             cmd = [
                 java_exe, 
-                f"-Xmx{ram}", 
-                f"-Xms{ram}", 
+                f"-Xmx{ram}G", 
+                f"-Xms{ram}G", 
                 "-jar", jar_full_path.name
             ]
-            cmd = "java -jar server.jar"
 
             self.process = subprocess.Popen(
                 cmd,
                 cwd=str(server_dir),
                 stdin=subprocess.PIPE,
+                stdout=subprocess.DEVNULL,
                 text=True,
-                #shell=True
             )
 
-            print(f"[SUCCESS] Server {name} is starting!")
-
         threading.Thread(target=run, daemon=True).start()
+        print(f"[SUCCESS] Server {name} is starting!")
 
     def stop(self):
         if self.process and self.process.poll() is None:
