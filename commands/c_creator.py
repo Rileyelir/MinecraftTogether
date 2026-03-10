@@ -5,7 +5,8 @@
 import requests
 from os import mkdir
 from shutil import rmtree
-from deps import data_interface
+from pathlib import Path
+from commands.deps import data_interface
 
 # Functions
 def create_server(): # Returning 0 means failed, 1 means success (in an ideal world)
@@ -16,9 +17,7 @@ def create_server(): # Returning 0 means failed, 1 means success (in an ideal wo
     mkdir(name)
     download_vanilla_jar(version, name)
 
-    maxRam = input("\nServer Ram Limit (gb): ")
-    with open(f"{name}/start.bat", "w") as file:
-        file.write(f"java -Xmx{maxRam}G -Xms{maxRam}G -jar server.jar nogui")
+    maxRam = int(input("\nServer Ram Limit (gb): "))
 
     while True: # EULA Check
         print("\nhttps://account.mojang.com/documents/minecraft_eula")
@@ -36,7 +35,8 @@ def create_server(): # Returning 0 means failed, 1 means success (in an ideal wo
             case _:
                 print("Invalid answer, try again.")
 
-    data_interface.add_server(name, name)
+    data_interface.add_server(name, str(Path(name).resolve())+"/server.jar", maxRam)
+    print(f"\nServer creation completed, {name} added to server list.")
 
 def download_vanilla_jar(version, path):
     vanillaManifest = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest.json").json()
@@ -51,6 +51,3 @@ def download_vanilla_jar(version, path):
             print("[SUCCESS] Server file downloaded successfully.")
             return
     print("[ERROR] Version not found or other error occurred.")
-
-# Testing Code (ran when running c_creator.py separately)
-create_server()
