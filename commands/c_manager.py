@@ -14,13 +14,21 @@ def list():
     for serv in data_interface.get_value("servers"):
         print(f"{serv["name"]} ({serv["path"]})")
 
+def clear_missing_servers():
+    for serv in data_interface.get_value("servers"):
+        try:
+            with open(serv["path"], "r") as file:
+                pass
+        except FileNotFoundError:
+            data_interface.remove_server(serv["name"])
+
 def get_java_path():
     system_java = shutil.which("java")
     if system_java:
         return system_java
     return None
 
-class Manager:
+class Server: # might want to split this into a different file at some point in the near future
     def __init__(self):
         self.process = None
         self.currentServer = None
@@ -70,4 +78,4 @@ class Manager:
         else:
             print("No server is currently running.")
 
-serverInstance = Manager()
+serverInstance = Server()

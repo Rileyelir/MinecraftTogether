@@ -7,6 +7,8 @@ from commands import *
 # Main
 print("MinecraftTogether | V3.0.0-dev\nType \"help\" to get started.")
 
+c_manager.clear_missing_servers()
+
 while True:
     command = input("\n> ").split(" ")
     try:
