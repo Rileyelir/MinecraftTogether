@@ -7,6 +7,9 @@ import threading
 import shutil
 from pathlib import Path
 from commands.deps import data_interface
+from tkinter import filedialog
+from platform import system as currentOS
+import os
 
 # Class & Functions
 def list():
@@ -27,6 +30,16 @@ def get_java_path():
     if system_java:
         return system_java
     return None
+
+def add():
+    jar = filedialog.askopenfilename(title="Select the server's jar file.", filetypes=(("Server Jar", "*.jar"),))
+    name = input("Server Name: ")
+    maxRam = input("Server Ram Limit (gb): ")
+    data_interface.add_server(name, jar, maxRam)
+    print(f"\n[SUCCESS] Added server {name} to list.")
+
+def remove(serverName: str):
+    data_interface.remove_server(serverName)
 
 class Server: # might want to split this into a different file at some point in the near future
     def __init__(self):
@@ -69,12 +82,23 @@ class Server: # might want to split this into a different file at some point in 
             )
 
         threading.Thread(target=run, daemon=True).start()
+
+        if not data_interface.get_value("tunneler")["disabled"]:
+            system = currentOS()
+            filePath = data_interface.get_value("tunneler")["path"]
+            if system == "Windows":
+                os.startfile(filePath)
+            elif system == "Darwin": # macOS
+                os.system(f"open {filePath}") # needs to be tested
+            else: # Linux
+                os.system(f"xdg-open {filePath}") # needs to be tested
         print(f"[SUCCESS] Server {name} is starting!")
 
     def stop(self):
         if self.process and self.process.poll() is None:
             print("Stopping server...")
             self.process.communicate(input="stop\n")
+            self.process = None
         else:
             print("No server is currently running.")
 

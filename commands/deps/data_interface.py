@@ -20,7 +20,10 @@ def init_json():
     except FileNotFoundError:
         set_json({
             "servers": [],
-            "tunneler": None
+            "tunneler": {
+                "path": None,
+                "disabled": True
+            }
         })
     
 def set_value(key: str, value):

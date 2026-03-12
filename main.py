@@ -21,6 +21,20 @@ while True:
                         c_manager.serverInstance.start(command[2])
                     case "stop":
                         c_manager.serverInstance.stop()
+                    case "add":
+                        c_manager.add()
+                    case "remove":
+                        c_manager.remove(command[2])
+            case "tunnel":
+                match command[1]:
+                    case "add":
+                        c_tunnel.add()
+                    case "remove":
+                        c_tunnel.remove()
+                    case "toggle":
+                        c_tunnel.toggle()
+                    case "list":
+                        c_tunnel.list()
             case "create":
                 c_creator.create_server()
             case "help":
