@@ -13,21 +13,9 @@ def create_server(): # Returning 0 means failed, 1 means success (not really nec
     print("\n-- Server Creator --")
     name = input("Server Name: ")
     mkdir(name)
-    
-    while True:
-        print("\nServer Type:\n1. Vanilla\n2. Paper")
-        serverType = input("? ")
-        version = input("\nServer Version (1.12.2, etc): ")
 
-        match serverType:
-            case "1":
-                download_vanilla_jar(version, name)
-                break
-            case "2":
-                download_paper_jar(version, name)
-                break
-            case _:
-                print("[ERROR] Invalid response, select a number.")
+    version = input("\nServer Version (1.12.2, etc): ")
+    download_vanilla_jar(version, name)
 
     maxRam = int(input("\nServer Ram Limit (gb): "))
 
@@ -65,7 +53,7 @@ def download_vanilla_jar(version, path):
             return
     print("[ERROR] Version not found or other error occurred.")
 
-def download_paper_jar(version, path): # Can only download the server file as of now, paper is currently not working for starting it up
+def download_paper_jar(version, path): # Unused function, Paper likes to be different for starting it up and I don't want to figure it out at the moment. What is downloaded is an install file, not the server file.
     url = "https://api.papermc.io/v2/projects/paper"
     for v in requests.get(url).json()["versions"]:
         if v == version:
