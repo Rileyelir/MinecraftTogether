@@ -11,6 +11,8 @@ c_manager.clear_missing_servers()
 
 while True:
     command = input("\n> ").split(" ")
+    lastArg = " ".join(command[2:])
+
     try:
         match command[0]:
             case "manager":
@@ -18,13 +20,13 @@ while True:
                     case "list":
                         c_manager.list()
                     case "start":
-                        c_manager.serverInstance.start(command[2])
+                        c_manager.serverInstance.start(lastArg)
                     case "stop":
                         c_manager.serverInstance.stop()
                     case "add":
                         c_manager.add()
                     case "remove":
-                        c_manager.remove(command[2])
+                        c_manager.remove(lastArg)
             case "tunnel":
                 match command[1]:
                     case "add":
