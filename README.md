@@ -1,19 +1,36 @@
-# MinecraftTogether V2
+# MinecraftTogether
 
-A useful tool for managing and setting up self-hosted servers for Minecraft with ease.
+A suite of tools to create, manage, and tunnel/network your Minecraft servers with ease.
 
-## Features
+---
 
-- Server Manager: Add or remove servers from the list and start servers easily; optionally alongside a tunneler.
+### Why should I use this?
+Have you ever tried setting up a Minecraft server for your friends and realized, "This is hard"?
+Maybe not, but it sure is annoying making your 10th two-week Minecraft friend server of the year.
+What about port forwarding? What if your router simply refuses to let you do anything smart?
 
-- Server Setup Wizard: Simplifying server setup. Automatically set up a server for any version of Paper, Forge, or Fabric.
+MinecraftTogether aims to make local server creation, configuration, management, and networking all easy and fast.
 
-## Read This
+### Features
+- ***Up-to-date Server Creation***
+Create full working servers in less than 20 seconds with ease on the latest versions the second they come out.
+- ***Streamlined Management***
+Start and stop any server added to the internal server list with a single command.
+- ***Tunneler Support***
+Fire up tunneling programs in parallel with your server, making networking a breeze without having to ever touch port forwarding.
 
-This is my first big project, so if this program helped you I would very much appreciate you starring the repository to get it more attention. If you have any problems, first check the wiki tab on this repo. If that doesn't solve your problem, submit an issue in the issue tab on the GitHub repo. If you have a suggestion, I would love to hear it in the discussions tab in the Suggestions & Ideas section. Thanks for reading, and I hope this helps your Minecraft servers.
+### What's Next?
+There are a couple features planned for future updates on top of and inside the V3 backend.
+- Full Graphical User Interface
+- Server Property Editor
+- Forge & PaperMC Server Creator Support
+Be sure to follow the repository to keep up to date on any releases!
 
-**If you get confused on how to use it, check the GitHub wiki for instructions.**
+---
 
-### Disclaimers
+### End Notes
+Thank you for checking out the project!
 
-If you are on linux, you need xterm or a terminal emulator that can be used by passing the command xterm to start servers.
+This is MinecraftTogether, a tool that I've had sitting on the shelf for a while with a latest release that had multiple features outright broken and the program was unfunctional. It was pretty old too, with the latest release of V2 dating back to my 9th grade of high school. I figured now would be a great time to revisit this and build it from the ground up into something that people could use and get genuine value out of, including me.
+
+If you like what I've created here, it would mean the world if you could give the repository a star! If you aren't too happy about the current features or how something works, any feedback would be wonderful by opening an issue or making a post in the Discussions tab. I'm always open to code fixes and suggestions to make things better too if you're here as a programmer.
