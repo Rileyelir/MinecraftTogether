@@ -14,18 +14,23 @@ MinecraftTogether aims to make local server creation, configuration, management,
 ### Features
 - ***Up-to-date Server Creation***
 Create full working servers in less than 20 seconds with ease on the latest versions the second they come out.
-- ***Easy Configuration***
-W.I.P.
 - ***Streamlined Management***
-W.I.P.
+Start and stop any server added to the internal server list with a single command.
 - ***Tunneler Support***
-W.I.P.
+Fire up tunneling programs in parallel with your server, making networking a breeze without having to ever touch port forwarding.
+
+### What's Next?
+There are a couple features planned for future updates on top of and inside the V3 backend.
+- Full Graphical User Interface
+- Server Property Editor
+- Forge & PaperMC Server Creator Support
+Be sure to follow the repository to keep up to date on any releases!
 
 ---
 
 ### End Notes
 Thank you for checking out the project!
 
-This is MinecraftTogether, a tool that I've had sitting on the shelf for a while with a latest release that had multiple features outright broken and the program was unfunctional. It was pretty old too, with the latest release of V2 dating back to my 9th grade of high school. I figured now would be a great time to revisit this and build it from the ground up into something that people could use and get genuine value out of, including me!
+This is MinecraftTogether, a tool that I've had sitting on the shelf for a while with a latest release that had multiple features outright broken and the program was unfunctional. It was pretty old too, with the latest release of V2 dating back to my 9th grade of high school. I figured now would be a great time to revisit this and build it from the ground up into something that people could use and get genuine value out of, including me.
 
 If you like what I've created here, it would mean the world if you could give the repository a star! If you aren't too happy about the current features or how something works, any feedback would be wonderful by opening an issue or making a post in the Discussions tab. I'm always open to code fixes and suggestions to make things better too if you're here as a programmer.
