@@ -9,13 +9,33 @@ from pathlib import Path
 from commands.deps import data_interface
 
 # Functions
-def create_server(): # Returning 0 means failed, 1 means success (not really necessary but its there i guess)
+
+# Gets user input on different things about the server they want to make, and puts it all together by calling download functions and setting data
+def create_server():
     print("\n-- Server Creator --")
     name = input("Server Name: ")
     mkdir(name)
 
+    while True:
+        print("\nServer Types:\n1. Vanilla\n2. Paper\n3. Forge (unimplemented)")
+        stype = input("? ")
+        if stype == "1" or stype == "2": # Add 3 when forge is implemented
+            break
+        else:
+            print("[ERROR] Answer not valid, please try again.")
+
     version = input("\nServer Version (1.12.2, etc): ")
-    download_vanilla_jar(version, name)
+    try:
+        match stype:
+            case "1":
+                download_vanilla_jar(version, name)
+            case "2":
+                download_paper_jar(version, name)
+    except Exception as e:
+        print("\n[ERROR] Connection with one of the providers' API has failed. Either the provider is down or you are not connected to the internet.")
+        print(e)
+        rmtree(name)
+        return
 
     maxRam = int(input("\nServer Ram Limit (gb): "))
 
@@ -31,14 +51,14 @@ def create_server(): # Returning 0 means failed, 1 means success (not really nec
             case "n":
                 print("EULA disagreed to, server creation shutting down.")
                 rmtree(name)
-                return 0
+                return
             case _:
                 print("[ERROR] Invalid answer, try again.")
 
     data_interface.add_server(name, str(Path(name).resolve())+"/server.jar", maxRam)
     print(f"\nServer creation completed, {name} added to server list.")
-    return 1
 
+# Fetches the official version manifest and sifts through it to find the selected version and downloads it
 def download_vanilla_jar(version, path):
     vanillaManifest = requests.get("https://launchermeta.mojang.com/mc/game/version_manifest.json").json()
     for v in vanillaManifest["versions"]:
@@ -53,7 +73,8 @@ def download_vanilla_jar(version, path):
             return
     print("[ERROR] Version not found or other error occurred.")
 
-def download_paper_jar(version, path): # Unused function, Paper likes to be different for starting it up and I don't want to figure it out at the moment. What is downloaded is an install file, not the server file.
+# Uses the PaperMC v2 api and builds on top of a url after finding the version and the build number and downloads the server file.
+def download_paper_jar(version, path):
     url = "https://api.papermc.io/v2/projects/paper"
     for v in requests.get(url).json()["versions"]:
         if v == version:

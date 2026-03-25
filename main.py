@@ -5,7 +5,7 @@
 from commands import *
 
 # Main
-print("MinecraftTogether | V3.0.0-dev\nType \"help\" to get started.")
+print("MinecraftTogether | V3.0.0\nType \"help\" to get started.")
 
 c_manager.clear_missing_servers()
 
@@ -21,8 +21,6 @@ while True:
                         c_manager.list()
                     case "start":
                         c_manager.serverInstance.start(lastArg)
-                    case "stop":
-                        c_manager.serverInstance.stop()
                     case "add":
                         c_manager.add()
                     case "remove":

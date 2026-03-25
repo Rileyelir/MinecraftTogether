@@ -1,9 +1,8 @@
 # c_manager.py
-# Handles the management of servers, being an intermediary between user input and mt_data.json alongside controlling server states and auto-launching tunneling software.
+# Allows display and management of the server list along with starting servers.
 
 # Imports
 import subprocess
-import threading
 import shutil
 from pathlib import Path
 from commands.deps import data_interface
@@ -17,6 +16,7 @@ def list():
     for serv in data_interface.get_value("servers"):
         print(f"{serv["name"]} ({serv["path"]})")
 
+# Function that runs automatically on startup of main.py to clean up broken server paths
 def clear_missing_servers():
     for serv in data_interface.get_value("servers"):
         try:
@@ -31,6 +31,7 @@ def get_java_path():
         return system_java
     return None
 
+# Add server to list
 def add():
     jar = filedialog.askopenfilename(title="Select the server's jar file.", filetypes=(("Server Jar", "*.jar"),))
     name = input("Server Name: ")
@@ -38,10 +39,11 @@ def add():
     data_interface.add_server(name, jar, maxRam)
     print(f"\n[SUCCESS] Added server {name} to list.")
 
+# Remove server from list
 def remove(serverName: str):
     data_interface.remove_server(serverName)
 
-class Server: # might want to split this into a different file at some point in the near future
+class Server: # might want to split this into a different file at some point
     def __init__(self):
         self.process = None
         self.currentServer = None
@@ -57,31 +59,29 @@ class Server: # might want to split this into a different file at some point in 
             print("[ERROR] There is a a server already active.")
             return
 
-        def run():
-            java_exe = get_java_path()
-            if not java_exe:
-                print("[ERROR] Java not found. Please install Java and link it to your global PATH.")
-                return
-            jar_full_path = Path(self.currentServer["path"])
-            ram = self.currentServer["ram"]
-            server_dir = jar_full_path.parent 
+        java_exe = get_java_path()
+        if not java_exe:
+            print("[ERROR] Java not found. Please install Java and link it to your global PATH.")
+            return
+        jar_full_path = Path(self.currentServer["path"])
+        ram = self.currentServer["ram"]
+        server_dir = jar_full_path.parent 
 
-            cmd = [
-                java_exe, 
-                f"-Xmx{ram}G", 
-                f"-Xms{ram}G", 
-                "-jar", jar_full_path.name
-            ]
+        cmd = [
+            java_exe, 
+            f"-Xmx{ram}G", 
+            f"-Xms{ram}G", 
+            "-jar", jar_full_path.name,
+            "--nogui"
+        ]
 
-            self.process = subprocess.Popen(
-                cmd,
-                cwd=str(server_dir),
-                stdin=subprocess.PIPE,
-                stdout=subprocess.DEVNULL,
-                text=True,
-            )
-
-        threading.Thread(target=run, daemon=True).start()
+        self.process = subprocess.Popen(
+            cmd,
+            cwd=str(server_dir),
+            #stdin=subprocess.PIPE,
+            #stdout=subprocess.DEVNULL,
+            text=True,
+        )
 
         if not data_interface.get_value("tunneler")["disabled"]:
             system = currentOS()
@@ -89,17 +89,12 @@ class Server: # might want to split this into a different file at some point in 
             if system == "Windows":
                 os.startfile(filePath)
             elif system == "Darwin": # macOS
-                os.system(f"open {filePath}") # needs to be tested
+                os.system(f"open {filePath}") # needs to be tested (but how?)
             else: # Linux
                 os.system(f"xdg-open {filePath}") # needs to be tested
-        print(f"[SUCCESS] Server {name} is starting!")
 
-    def stop(self):
-        if self.process and self.process.poll() is None:
-            print("Stopping server...")
-            self.process.communicate(input="stop\n")
-            self.process = None
-        else:
-            print("No server is currently running.")
+        print(f"[SUCCESS] Server {name} is starting!")
+        self.process.wait() # Stop all code until server closes
+        print("\n[NOTICE] Server closed, re-entering MinecraftTogether...")
 
 serverInstance = Server()

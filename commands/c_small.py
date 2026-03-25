@@ -12,7 +12,6 @@ def help(command: str): # yes i know it shouldn't be 5 million print statements 
             print("----------------------------")
             print("manager list | Lists all usable servers.")
             print("manager start <server-name> | Starts the server specified in the argument.")
-            print("manager stop | Stops the currently running server.")
             print("manager add | Adds a new server to the list.")
             print("manager remove <server-name> | Removes a server from the list.")
         case "tunnel":
