@@ -67,13 +67,7 @@ class Server: # might want to split this into a different file at some point
         ram = self.currentServer["ram"]
         server_dir = jar_full_path.parent 
 
-        cmd = [
-            java_exe, 
-            f"-Xmx{ram}G", 
-            f"-Xms{ram}G", 
-            "-jar", jar_full_path.name,
-            "--nogui"
-        ]
+        cmd = self.currentServer["cmd"]
 
         self.process = subprocess.Popen(
             cmd,

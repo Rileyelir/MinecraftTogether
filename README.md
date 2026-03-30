@@ -13,17 +13,24 @@ MinecraftTogether aims to make local server creation, configuration, management,
 
 ### Features
 - ***Up-to-date Server Creation***
-Create full working servers in less than 20 seconds with ease on the latest versions the second they come out.
+
+Create full working servers (either vanilla or modded) in less than 20 seconds with ease on the latest versions the second they come out. Optional support for PaperMC included. Forge is currently the only option for modded servers, but more options are on the way. (This does not affect adding servers, your manually created servers should work no matter what they run on)
+
 - ***Streamlined Management***
-Start and stop any server added to the internal server list with a single command.
+
+Keep all your servers organized into the built-in server list and easily start any with a single command. The terminal window will then hand over control to the server, where you can send server commands normally. (Fully featured GUI coming V3.2.0)
+
 - ***Tunneler Support***
+
 Fire up tunneling programs in parallel with your server, making networking a breeze without having to ever touch port forwarding.
 
 ### What's Next?
 There are a couple features planned for future updates on top of and inside the V3 backend.
-- Full Graphical User Interface
-- Server Property Editor
-- Forge & PaperMC Server Creator Support
+
+- Full Graphical User Interface (COMING V3.2.0)
+- Server Property Editor (COMING v3.2.0)
+- Forge & PaperMC Server Creator Support (DONE, CHECK V3.1.0)
+
 Be sure to follow the repository to keep up to date on any releases!
 
 ---

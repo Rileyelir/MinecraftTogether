@@ -36,7 +36,7 @@ def get_value(key: str):
     init_json()
     return get_json()[key]
 
-def add_server(name: str, path: str, ram: int): # path is the path to the start file, not the folder
+def add_server(name: str, path: str, ram: int, cmd): # path is the path to the start file, not the folder
     serverList = get_value("servers")
     
     for sv in serverList: # same name check, no repeated server names
@@ -47,7 +47,8 @@ def add_server(name: str, path: str, ram: int): # path is the path to the start 
     new.append({
         "name": name,
         "path": path,
-        "ram": ram
+        "ram": ram,
+        "cmd": cmd
     })
     set_value("servers", new)
 

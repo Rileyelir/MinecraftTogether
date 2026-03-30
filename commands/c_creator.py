@@ -3,10 +3,24 @@
 
 # Imports
 import requests
-from os import mkdir
+from os import mkdir, listdir, remove
+from os import name as osName
 from shutil import rmtree
 from pathlib import Path
 from commands.deps import data_interface
+from time import sleep
+import subprocess
+from tkinter import filedialog
+
+# Variables
+defaultCMD = [
+    "java", 
+    "", # Placeholder/template for something like -Xmx4G
+    "", 
+    "-jar",
+    "", # Start file path
+    "--nogui"
+]
 
 # Functions
 
@@ -15,29 +29,44 @@ def create_server():
     print("\n-- Server Creator --")
     name = input("Server Name: ")
     mkdir(name)
+    serverInfo = []
 
     while True:
-        print("\nServer Types:\n1. Vanilla\n2. Paper\n3. Forge (unimplemented)")
+        print("\nServer Types:\n1. Vanilla\n2. Paper\n3. Forge")
         stype = input("? ")
-        if stype == "1" or stype == "2": # Add 3 when forge is implemented
+        if stype == "1" or stype == "2" or stype == "3":
             break
         else:
             print("[ERROR] Answer not valid, please try again.")
-
+    
+    maxRam = int(input("\nServer Ram Limit (gb): "))
     version = input("\nServer Version (1.12.2, etc): ")
     try:
         match stype:
             case "1":
-                download_vanilla_jar(version, name)
+                serverInfo = download_vanilla_jar(version, name)
             case "2":
-                download_paper_jar(version, name)
+                serverInfo = download_paper_jar(version, name)
+            case "3":
+                serverInfo = download_forge_jar(version, name, maxRam)
     except Exception as e:
         print("\n[ERROR] Connection with one of the providers' API has failed. Either the provider is down or you are not connected to the internet.")
-        print(e)
+        #print(e)
+        rmtree(name)
+        return
+    
+    if serverInfo == []: # If something went wrong in one of the download functions, cancel server creation
         rmtree(name)
         return
 
-    maxRam = int(input("\nServer Ram Limit (gb): "))
+    # Specify Java version check
+    print("\nDo you want to specify a version of Java to use? (y/N)")
+    print("This is only required for servers that don't specifically work with the Java version found in your PATH. Select no if this doesn't apply to you.")
+    print("If you are running a modern Forge server (1.17+), you will have to add the path to the jvm arguments in the server files manually for now.")
+    javaChoice = input("? ")
+    if javaChoice.lower() == "y":
+        serverInfo[1][0] = filedialog.askopenfilename(title="Select the executable for the specified Java version.")
+        print("[SUCCESS] Java version set for this server.")
 
     while True: # EULA Check
         print("\nhttps://account.mojang.com/documents/minecraft_eula")
@@ -55,7 +84,12 @@ def create_server():
             case _:
                 print("[ERROR] Invalid answer, try again.")
 
-    data_interface.add_server(name, str(Path(name).resolve())+"/server.jar", maxRam)
+    if serverInfo[1] == defaultCMD: # if not a modern forge server, set proper thingamajigs
+        serverInfo[1][1] = f"-Xmx{maxRam}G"
+        serverInfo[1][2] = f"-Xms{maxRam}G"
+        serverInfo[1][4] = serverInfo[0]
+
+    data_interface.add_server(name, serverInfo[0], maxRam, serverInfo[1])
     print(f"\nServer creation completed, {name} added to server list.")
 
 # Fetches the official version manifest and sifts through it to find the selected version and downloads it
@@ -70,7 +104,7 @@ def download_vanilla_jar(version, path):
                 for chunk in serverJar.iter_content(chunk_size=8192):
                     file.write(chunk)
             print("[SUCCESS] Server file downloaded successfully.")
-            return
+            return [str(Path(path).resolve())+"/server.jar", defaultCMD]
     print("[ERROR] Version not found or other error occurred.")
 
 # Uses the PaperMC v2 api and builds on top of a url after finding the version and the build number and downloads the server file.
@@ -87,5 +121,55 @@ def download_paper_jar(version, path):
                 for chunk in serverJar.iter_content(chunk_size=8192):
                     file.write(chunk)
             print("[SUCCESS] Server file downloaded successfully.")
-            return
+            return [str(Path(path).resolve())+"/server.jar", defaultCMD]
     print("[ERROR] Version not found or other error occurred.")
+
+# Find forge version and download a server installer, install the server, cleanup installation files.
+def download_forge_jar(version, path, maxRam):
+    try:
+        forgeVersion = requests.get("https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json").json()["promos"][version+"-recommended"]
+        print("\n[SUCCESS] Version found, downloading installer...")
+        isLegacy = True if int(version.split(".")[1]) < 17 else False
+
+        fullVersion = version+"-"+forgeVersion
+        serverJar = requests.get(f"https://maven.minecraftforge.net/net/minecraftforge/forge/{fullVersion}/forge-{fullVersion}-installer.jar", stream=True)
+        with open(f"{path}/server-installer.jar", "wb") as file:
+            for chunk in serverJar.iter_content(chunk_size=8192):
+                file.write(chunk)
+        print("[SUCCESS] Forge installer downloaded, installing server... (this may take a minute)")
+
+        cmd = [
+            "java",
+            "-jar",
+            "server-installer.jar",
+            "--installServer"
+        ]
+        process = subprocess.Popen(
+            cmd,
+            cwd=Path(path).absolute(),
+            #stdout=subprocess.DEVNULL,
+            text=True
+        )
+        process.wait()
+
+        print("\n[SUCCESS] Server installer finished, finding start file and cleaning up...")
+        startFile: Path
+        selectedCMD = defaultCMD
+        if isLegacy:
+            for f in listdir(path):
+                if f.endswith(".jar") and f[0:5] == "forge":
+                    startFile = str(Path(f"{path}/{f}").absolute())
+                if f[0:16] == "server-installer":
+                    remove(f"{path}/{f}")
+        else:
+            for f in listdir(path):
+                if ((osName == "nt" and f.endswith(".bat")) or (osName != "nt" and f.endswith(".sh"))) and f[0:3] == "run":
+                    startFile = str(Path(f"{path}/{f}").absolute())
+                    selectedCMD = [startFile]
+                if f[0:16] == "server-installer":
+                    remove(f"{path}/{f}")
+        return [startFile, selectedCMD]
+
+    except Exception as e:
+        print("[ERROR] Version not found or other error occurred.")
+        print(e)

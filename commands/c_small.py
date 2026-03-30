@@ -2,7 +2,7 @@
 # Command module dedicated for smaller snippets of code that don't warrant their own file. Maybeee help should have its own file, but oh well.
 
 # Imports
-import os
+from os import system, name
 
 def help(command: str): # yes i know it shouldn't be 5 million print statements but it works fine and i like it :)
     match command:
@@ -34,4 +34,4 @@ def help(command: str): # yes i know it shouldn't be 5 million print statements 
             print("exit | Closes the program.")
 
 def clear():
-    os.system('cls' if os.name == 'nt' else 'clear')
+    system('cls' if name == 'nt' else 'clear')
