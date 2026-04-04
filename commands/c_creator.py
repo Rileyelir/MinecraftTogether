@@ -127,7 +127,10 @@ def download_paper_jar(version, path):
 # Find forge version and download a server installer, install the server, cleanup installation files.
 def download_forge_jar(version, path, maxRam):
     try:
-        forgeVersion = requests.get("https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json").json()["promos"][version+"-recommended"]
+        try:
+            forgeVersion = requests.get("https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json").json()["promos"][version+"-recommended"]
+        except:
+            forgeVersion = requests.get("https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json").json()["promos"][version+"-latest"]
         print("\n[SUCCESS] Version found, downloading installer...")
         isLegacy = True if int(version.split(".")[1]) < 17 else False
 

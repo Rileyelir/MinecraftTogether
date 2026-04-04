@@ -33,10 +33,34 @@ def get_java_path():
 
 # Add server to list
 def add():
-    jar = filedialog.askopenfilename(title="Select the server's jar file.", filetypes=(("Server Jar", "*.jar"),))
+    jar = filedialog.askopenfilename(title="Select the server's start file.")
     name = input("Server Name: ")
     maxRam = input("Server Ram Limit (gb): ")
-    data_interface.add_server(name, jar, maxRam)
+
+    # Specify Java version check
+    print("\nDo you want to specify a version of Java to use? (y/N)")
+    print("This is only required for servers that don't specifically work with the Java version found in your PATH. Select no if this doesn't apply to you.")
+    print("If you are running a modern Forge server (1.17+), you will have to add the path to the jvm arguments in the server files manually for now.")
+    javaChoice = input("? ")
+    specJava = "java"
+    if javaChoice.lower() == "y":
+        specJava = filedialog.askopenfilename(title="Select the executable for the specified Java version.")
+        print("[SUCCESS] Java version set for this server.")
+
+    cmd = []
+    if jar.endswith(".jar"):
+        cmd = [
+            specJava, 
+            f"-Xmx{maxRam}G",
+            f"-Xms{maxRam}G", 
+            "-jar",
+            jar,
+            "--nogui"
+        ]
+    else:
+        cmd = [jar]
+
+    data_interface.add_server(name, jar, maxRam, cmd)
     print(f"\n[SUCCESS] Added server {name} to list.")
 
 # Remove server from list
