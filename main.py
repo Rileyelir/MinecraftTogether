@@ -5,7 +5,7 @@
 from commands import *
 
 # Main
-print("MinecraftTogether | V3.0.0\nType \"help\" to get started.")
+print("MinecraftTogether | V3.1.0\nType \"help\" to get started.")
 
 c_manager.clear_missing_servers()
 
