@@ -114,5 +114,6 @@ class Server: # might want to split this into a different file at some point
         print(f"[SUCCESS] Server {name} is starting!")
         self.process.wait() # Stop all code until server closes
         print("\n[NOTICE] Server closed, re-entering MinecraftTogether...")
+        self.process = None
 
 serverInstance = Server()
